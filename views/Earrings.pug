@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1=title
+  - let results = [{ material: 'Gold', price: 100, style: 'Stud' },{ material: 'Silver', price: 50, style: 'Hoop' },{ material: 'Diamond', price: 500, style: 'Drop' }]
+  
+  .container-fluid
+    .row
+      each item, index in results
+        .col-sm-2(onclick=`buy(${index})`)
+          p Material: #{item.material} 
+          p Price: #{item.price} 
+          p Style:#{item.style}
+  script.
+    function buy(index) {
+      alert(`You purchased item ${index}`);
+    }
+          
+ 
+  
