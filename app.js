@@ -3,16 +3,81 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
+require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var EarringsRouter=require('./routes/Earrings');
 var boardRouter=require('./routes/board');
 var chooseRouter=require('./routes/choose');
+var ResourceRouter=require('./routes/resource');
+var Earring=require('./models/Earrings');
+  
+async function recreateDB() {
+  // Delete everything
+  await Earring.deleteMany();
+
+  let instance1 = new Earring({
+    material: 'Gold',
+    price: 100, 
+    style: 'Stud'
+  });
+  let instance2= new Earring({
+    material: 'Silver',
+    price: 50, 
+    style: 'Hoop' 
+  });
+  let instance3 = new Earring({
+    material: 'Diamond', 
+    price: 500, 
+    style: 'Drop'
+  });
+
+  instance1.save()
+    .then(doc => {
+      console.log("First object saved");
+    })
+    .catch(err => {
+      console.error(err);
+    });
+    instance2.save()
+    .then(doc => {
+      console.log("second object saved");
+    })
+    .catch(err => {
+      console.error(err);
+    });
+    instance3.save()
+    .then(doc => {
+      console.log("third object saved");
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+
+let reseed = true;
+if (reseed) {
+  recreateDB(); // Seed the database on server start
+}
 
 
 
 var app = express();
+
+const connectionString =process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,{useNewUrlParser: true,useUnifiedTopology: true});
+var db = mongoose.connection;
+
+// Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// Check if the connection is successful
+db.once("open", function() {
+  console.log("Connection to DB succeeded");
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +94,10 @@ app.use('/users', usersRouter);
 app.use('/Earrings', EarringsRouter);
 app.use('/board', boardRouter);
 app.use('/choose', chooseRouter);
+app.use('/resource',ResourceRouter);
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

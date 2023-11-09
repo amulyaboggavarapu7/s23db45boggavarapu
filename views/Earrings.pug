@@ -2,11 +2,11 @@ extends layout
 
 block content
   h1=title
-  - let results = [{ material: 'Gold', price: 100, style: 'Stud' },{ material: 'Silver', price: 50, style: 'Hoop' },{ material: 'Diamond', price: 500, style: 'Drop' }]
+  - let result = results
   
   .container-fluid
     .row
-      each item, index in results
+      each item, index in result
         .col-sm-2(onclick=`buy(${index})`)
           p Material: #{item.material} 
           p Price: #{item.price} 
