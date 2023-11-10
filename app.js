@@ -13,22 +13,25 @@ var boardRouter=require('./routes/board');
 var chooseRouter=require('./routes/choose');
 var ResourceRouter=require('./routes/resource');
 var Earring=require('./models/Earrings');
-  
+
 async function recreateDB() {
   // Delete everything
   await Earring.deleteMany();
 
   let instance1 = new Earring({
+    
     material: 'Gold',
     price: 100, 
     style: 'Stud'
   });
   let instance2= new Earring({
+    
     material: 'Silver',
     price: 50, 
     style: 'Hoop' 
   });
   let instance3 = new Earring({
+    
     material: 'Diamond', 
     price: 500, 
     style: 'Drop'
@@ -95,6 +98,7 @@ app.use('/Earrings', EarringsRouter);
 app.use('/board', boardRouter);
 app.use('/choose', chooseRouter);
 app.use('/resource',ResourceRouter);
+
 
 
 
