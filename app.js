@@ -13,7 +13,7 @@ var boardRouter=require('./routes/board');
 var chooseRouter=require('./routes/choose');
 var ResourceRouter=require('./routes/resource');
 var Earring=require('./models/Earrings');
-var EarringsdetailRouter=require('./routes/Earring');
+
 
 async function recreateDB() {
   // Delete everything
@@ -99,7 +99,7 @@ app.use('/Earrings', EarringsRouter);
 app.use('/board', boardRouter);
 app.use('/choose', chooseRouter);
 app.use('/resource',ResourceRouter);
-app.use('/Earring',EarringsdetailRouter);
+
 
 
 
