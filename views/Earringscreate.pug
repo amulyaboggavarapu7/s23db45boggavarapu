@@ -1,0 +1,31 @@
+extends layout
+block content
+  h1= title
+  form(id='EarringsForm', action="/resource/Earrings", method="POST")
+    div.form-group
+      label.EarringAttr(for='material') Erarings Material
+      input#material(type='text', name='material')
+    div.form-group
+      label.EarringAttr(for='price') Earrings price
+      input#price(type='number', name='price')
+    div.form-group
+      label.EarringAttr(for='style') Earrings style
+      input#style(type='text', name='style')
+    input(type="submit")
+  script.
+    document.forms['EarringsForm'].addEventListener('submit', (event) => {
+      event.preventDefault();
+      // TODO do something here to show user that form is being submitted
+      fetch(event.target.action, {
+        method: 'POST',
+        body: new URLSearchParams(new FormData(event.target)) // event.target is the form
+      }).then((resp) => {
+        return resp.json(); // or resp.text() or whatever the server sends
+      }).then((body) => {
+        alert("Save succeded")
+        // TODO handle body
+      }).catch((error) => {
+        // TODO handle error
+        alert("Save failed " + error )
+      });
+    });

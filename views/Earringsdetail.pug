@@ -1,0 +1,24 @@
+extends layout
+block content
+  h1= title
+  if (toShow == null)
+    h2 No instance to detail
+  else
+    - let Earringsid = toShow._id
+    - let material= toShow.material
+    - let price = toShow.price
+    - let style = toShow.style
+    div
+      div.row
+        div(class='EarringAttr mr-3') Earring ID is:
+        div #{Earringsid}
+      div.row
+        div(class='EarringAttr mr-3') Earring material is:
+        div #{material}
+      div.row
+        div(class='EarringAttr mr-3') Earring price is:
+        div #{price}
+      div.row
+        div(class='EarringAttr mr-3') Earring style is:
+        div #{style}
+
