@@ -7,33 +7,33 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-  Account.findOne({ username: username })
-  .then(function (user){
-  if (err) { return done(err); }
-  if (!user) {
-  return done(null, false, { message: 'Incorrect username.' });
-  }
-  if (!user.validPassword(password)) {
-  return done(null, false, { message: 'Incorrect password.' });
-  }
-  return done(null, user);
+  function (username, password, done) {
+    Account.findOne({ username: username })
+      .then(function (user) {
+        if (err) { return done(err); }
+        if (!user) {
+          return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (!user.validPassword(password)) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      })
+      .catch(function (err) {
+        return done(err)
+      })
   })
-  .catch(function(err){
-  return done(err)
-  })
-  })
-  )
-  
+)
+
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var EarringsRouter=require('./routes/Earrings');
-var boardRouter=require('./routes/board');
-var chooseRouter=require('./routes/choose');
-var ResourceRouter=require('./routes/resource');
-var Earring=require('./models/Earrings');
+var EarringsRouter = require('./routes/Earrings');
+var boardRouter = require('./routes/board');
+var chooseRouter = require('./routes/choose');
+var ResourceRouter = require('./routes/resource');
+var Earring = require('./models/Earrings');
 
 
 
@@ -42,21 +42,21 @@ async function recreateDB() {
   await Earring.deleteMany();
 
   let instance1 = new Earring({
-    
+
     material: 'Gold',
-    price: 100, 
+    price: 100,
     style: 'Stud'
   });
-  let instance2= new Earring({
-    
+  let instance2 = new Earring({
+
     material: 'Silver',
-    price: 50, 
-    style: 'Hoop' 
+    price: 50,
+    style: 'Hoop'
   });
   let instance3 = new Earring({
-    
-    material: 'Diamond', 
-    price: 500, 
+
+    material: 'Diamond',
+    price: 500,
     style: 'Drop'
   });
 
@@ -67,14 +67,14 @@ async function recreateDB() {
     .catch(err => {
       console.error(err);
     });
-    instance2.save()
+  instance2.save()
     .then(doc => {
       console.log("second object saved");
     })
     .catch(err => {
       console.error(err);
     });
-    instance3.save()
+  instance3.save()
     .then(doc => {
       console.log("third object saved");
     })
@@ -92,16 +92,16 @@ if (reseed) {
 
 var app = express();
 
-const connectionString =process.env.MONGO_CON
+const connectionString = process.env.MONGO_CON
 mongoose = require('mongoose');
-mongoose.connect(connectionString,{useNewUrlParser: true,useUnifiedTopology: true});
+mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
 
 // Bind connection to error event
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Check if the connection is successful
-db.once("open", function() {
+db.once("open", function () {
   console.log("Connection to DB succeeded");
 });
 
@@ -120,21 +120,28 @@ app.use('/users', usersRouter);
 app.use('/Earrings', EarringsRouter);
 app.use('/board', boardRouter);
 app.use('/choose', chooseRouter);
-app.use('/resource',ResourceRouter);
+app.use('/resource', ResourceRouter);
 app.use(require('express-session')({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
-  }));
-  app.use(passport.initialize());
-  app.use(passport.session());
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+// passport config
+// Use the existing connection
+// The Account model
+var Account = require('./models/account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
