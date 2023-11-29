@@ -2,18 +2,17 @@ extends layout
 block content
   h1= title
   if (toShow == null)
-    h2 No instance to update
+    h2.heading No instance to update
   else
-    - let actionid=""
     - let Earringsid = toShow._id
     - let material = toShow.material
     - let price = toShow.price
     - let style= toShow.style
+    - var actionid = "/resource/Earrings/" + toShow._id
     div.row(class='mb-2')
       div.mr-1 ID is
-      div #{Earringsid}
-    - actionid = "/resource/Earrings/" + Earringsid
-    - console.log(actionid+" "+Earringsid)
+      div #{actionid}
+      
     form(id='EarringsForm', action= actionid, method="PUT")
       div.form-group
         label.EarringAttr(for='material') Earrings material
@@ -39,7 +38,6 @@ block content
         // TODO handle body
         }).catch((error) => {
         // TODO handle error
-          console.log(actionid)
-          alert(actionid)
+          alert(error)
         });
       });
